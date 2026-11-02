@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "board.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -9,17 +10,13 @@ int main(int argc, char* argv[]) {
 
     int N = atoi(argv[1]);
     int M = atoi(argv[2]);
-    const char* config_file = (argc >= 4) ? argv[3] : NULL;
-
-    if (N <= 0 || M <= 0) {
-        fprintf(stderr, "Error: N y M deben ser mayores a 0.\n");
-        return 1;
-    }
 
     printf("[SERVIDOR] Iniciando Torneo Komikan: N=%d clientes, M=%d mesas max.\n", N, M);
-    if (config_file) {
-        printf("[SERVIDOR] Archivo de configuracion: %s\n", config_file);
-    }
+
+    Board test_board;
+    board_init(&test_board);
+    board_print(&test_board, 1, "Tablero Inicial de Prueba");
+    board_destroy(&test_board);
 
     return 0;
 }
