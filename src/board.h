@@ -41,7 +41,12 @@ typedef struct {
     bool dog_alive[NUM_DOGS];
     int captured_dogs;
     GameStatus status;
+
+    bool move_pending;
+    char last_event[64];
+
     pthread_mutex_t lock;
+    pthread_cond_t judge_cond;
 } Board;
 
 void board_init(Board* b);

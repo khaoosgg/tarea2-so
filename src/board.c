@@ -13,7 +13,6 @@ static void init_graph_topology(void) {
         }
     }
 
-    // Trono y conexiones superiores
     neighbors[0][DIR_DOWN_LEFT] = 1;
     neighbors[1][DIR_UP_RIGHT]  = 0;
     neighbors[1][DIR_DOWN_LEFT] = 3;
@@ -34,7 +33,6 @@ static void init_graph_topology(void) {
     neighbors[2][DIR_DOWN] = 6;
     neighbors[6][DIR_UP]   = 2;
 
-    // Cuadrícula 5x5 (nodos 3 al 27)
     for (int row = 0; row < 5; row++) {
         for (int col = 0; col < 5; col++) {
             int curr = 3 + row * 5 + col;
@@ -55,6 +53,8 @@ int board_get_neighbor(int node, Direction dir) {
 void board_init(Board* b) {
     init_graph_topology();
     pthread_mutex_init(&b->lock, NULL);
+    pthread_cond_init(&b->judge_cond, NULL);
+
     for (int i = 0; i < NUM_NODES; i++) {
         b->cells[i] = CELL_EMPTY;
     }
@@ -69,9 +69,12 @@ void board_init(Board* b) {
     }
     b->captured_dogs = 0;
     b->status = GAME_ONGOING;
+    b->move_pending = false;
+    snprintf(b->last_event, sizeof(b->last_event), "Inicio de Partida");
 }
 
 void board_destroy(Board* b) {
+    pthread_cond_destroy(&b->judge_cond);
     pthread_mutex_destroy(&b->lock);
 }
 
@@ -171,11 +174,15 @@ void board_print(Board* b, int mesa_id, const char* last_event) {
     printf("          (%c)          [00]\n", cell_char(b->cells[0]));
     printf("         / | \\ \n");
     printf("      (%c)--+--(%c)      [01-02]\n", cell_char(b->cells[1]), cell_char(b->cells[2]));
+    printf("     / |   |   | \\ \n");
     for (int row = 0; row < 5; row++) {
         int base = 3 + row * 5;
         printf("   (%c)-(%c)-(%c)-(%c)-(%c)  [%02d-%02d]\n",
-               cell_char(b->cells[base]), cell_char(b->cells[base + 1]),
-               cell_char(b->cells[base + 2]), cell_char(b->cells[base + 3]),
-               cell_char(b->cells[base + 4]), base, base + 4);
+               cell_char(b->cells[base]),
+               cell_char(b->cells[base + 1]),
+               cell_char(b->cells[base + 2]),
+               cell_char(b->cells[base + 3]),
+               cell_char(b->cells[base + 4]),
+               base, base + 4);
     }
 }

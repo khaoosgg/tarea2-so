@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "board.h"
+#include <time.h>
+#include "game.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -12,11 +13,12 @@ int main(int argc, char* argv[]) {
     int M = atoi(argv[2]);
 
     printf("[SERVIDOR] Iniciando Torneo Komikan: N=%d clientes, M=%d mesas max.\n", N, M);
+    
+    // Inicializar generador de números aleatorios global
+    srand((unsigned int)time(NULL));
 
-    Board test_board;
-    board_init(&test_board);
-    board_print(&test_board, 1, "Tablero Inicial de Prueba");
-    board_destroy(&test_board);
+    // Probamos ejecutando la simulación en la Mesa 1
+    run_table_simulation(1);
 
     return 0;
 }
