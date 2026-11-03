@@ -1,0 +1,4 @@
+delay_min_ms = 0
+delay_max_ms = 2
+arrival_max_ms = 20
+log_file =

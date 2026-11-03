@@ -1,0 +1,28 @@
+# config.txt — Torneo de Komikan Concurrente
+# Formato: clave = valor   (lo que va despues de # es comentario)
+
+# Retardo entre jugadas de cada ficha (ms). Enunciado: 50 a 300
+delay_min_ms = 50
+delay_max_ms = 300
+
+# Semilla para reproducibilidad
+seed = 42
+
+# Disposicion inicial: nodos 0..27 (0 = trono, 1-2 triangulo, 3-27 grilla 5x5)
+puma_start = 0
+dog_start  = 16,17,18,19,20,21,22,23,24,25,26,27
+
+# Limite de seguridad: eventos maximos por partida antes de abortarla
+max_moves = 2000
+
+# Llegada de clientes al servidor: retardo aleatorio entre 0 y 200 ms
+arrival_min_ms = 0
+arrival_max_ms = 200
+
+# Archivo de log (vacio = solo consola)
+log_file = falla.log
+
+# Falla inyectada para probar resiliencia (fail_mesa = -1 la desactiva)
+fail_mesa = 1
+fail_role = perros
+fail_after_moves = 10

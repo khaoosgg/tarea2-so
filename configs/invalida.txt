@@ -1,0 +1,4 @@
+delay_min_ms = 400
+delay_max_ms = 100
+puma_start = 30
+color = azul

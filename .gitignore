@@ -1,3 +1,7 @@
 torneo
+test_board
+test_jugador
+test_board_tsan
 *.o
 *.log
+*.out
