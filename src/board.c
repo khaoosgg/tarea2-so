@@ -1,3 +1,7 @@
+/* Habilita las extensiones POSIX/BSD (mmap anonimo, mutex robustos, rand_r...)
+ * incluso si se compila con 'gcc -std=c17' sin -D. Debe ir antes de todo #include. */
+#define _DEFAULT_SOURCE
+
 /*
  * board.c — Tablero de Komikan compartido entre procesos (Paso 4, v02)
  * Ver el resumen del esquema de sincronizacion en board.h.

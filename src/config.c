@@ -1,3 +1,7 @@
+/* Habilita las extensiones POSIX/BSD (mmap anonimo, mutex robustos, rand_r...)
+ * incluso si se compila con 'gcc -std=c17' sin -D. Debe ir antes de todo #include. */
+#define _DEFAULT_SOURCE
+
 /*
  * config.c — Lector de config.txt (Paso 2). Contrato en config.h.
  */
@@ -44,13 +48,18 @@ static int parse_long(const char *txt, long lo, long hi, long *out) {
     return 0;
 }
 
+/* "16,17,...,27": exactamente 12 numeros; rechaza vacios como "16,,17" o "16,17," */
 static int parse_dogs(char *txt, int dogs[NUM_DOGS]) {
     int n = 0;
-    char *save = NULL;
-    for (char *tok = strtok_r(txt, ",", &save); tok; tok = strtok_r(NULL, ",", &save)) {
+    char *p = txt;
+    for (;;) {
+        char *coma = strchr(p, ',');
+        if (coma) *coma = '\0';
         long v;
-        if (n >= NUM_DOGS || parse_long(trim(tok), 0, NUM_NODES - 1, &v) != 0) return -1;
+        if (n >= NUM_DOGS || parse_long(trim(p), 0, NUM_NODES - 1, &v) != 0) return -1;
         dogs[n++] = (int)v;
+        if (!coma) break;
+        p = coma + 1;
     }
     return n == NUM_DOGS ? 0 : -1;
 }
@@ -99,6 +108,13 @@ int config_load(const char *path, Config *c) {
         }
         *eq = '\0';
         char *clave = trim(s), *valor = trim(eq + 1);
+        if (*clave == '\0') {                  /* linea incompleta: "= 5" */
+            fprintf(stderr, "[CONFIG] %s:%d: falta la clave antes de '='\n", path, nlinea);
+            errores++;
+            continue;
+        }
+        char original[512];                     /* para el mensaje de error */
+        snprintf(original, sizeof original, "%s", valor);
         long v;
         int ok = 0;
 
@@ -119,7 +135,7 @@ int config_load(const char *path, Config *c) {
             continue;
         }
         if (!ok) {
-            fprintf(stderr, "[CONFIG] %s:%d: valor invalido para '%s': \"%s\"\n", path, nlinea, clave, valor);
+            fprintf(stderr, "[CONFIG] %s:%d: valor invalido para '%s': \"%s\"\n", path, nlinea, clave, original);
             errores++;
         }
     }

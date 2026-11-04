@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -Wall -Wextra -std=c17 -D_DEFAULT_SOURCE -pthread -g
+CFLAGS  = -Wall -Wextra -std=c17 -pthread -g
 LDFLAGS = -pthread
 
 SRCS   = $(wildcard src/*.c)
@@ -11,7 +11,7 @@ TARGET = torneo
 LIB_SRCS = $(filter-out src/main.c, $(SRCS))
 TESTS    = test_board test_jugador
 
-.PHONY: all clean test test-tsan
+.PHONY: all clean test test-tsan test-config
 
 all: $(TARGET)
 
@@ -22,9 +22,13 @@ $(TARGET): $(SRCS) $(HDRS)
 test_%: tests/test_%.c $(LIB_SRCS) $(HDRS)
 	$(CC) $(CFLAGS) -O1 -Isrc -o $@ $< $(LIB_SRCS) $(LDFLAGS)
 
-test: $(TESTS)
+test: $(TESTS) $(TARGET)
 	./test_board
 	./test_jugador
+	bash tests/test_config.sh
+
+test-config: $(TARGET)
+	bash tests/test_config.sh
 
 # test_board con ThreadSanitizer: detecta condiciones de carrera
 test-tsan: tests/test_board.c $(LIB_SRCS) $(HDRS)

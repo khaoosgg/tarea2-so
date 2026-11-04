@@ -1,3 +1,7 @@
+/* Habilita las extensiones POSIX/BSD (mmap anonimo, mutex robustos, rand_r...)
+ * incluso si se compila con 'gcc -std=c17' sin -D. Debe ir antes de todo #include. */
+#define _DEFAULT_SOURCE
+
 /*
  * jugador.c — Fichas del Komikan como hilos (Paso 5)
  * Ver el resumen en jugador.h.

@@ -1,3 +1,7 @@
+/* Habilita las extensiones POSIX/BSD (mmap anonimo, mutex robustos, rand_r...)
+ * incluso si se compila con 'gcc -std=c17' sin -D. Debe ir antes de todo #include. */
+#define _DEFAULT_SOURCE
+
 /*
  * matchmaker.c — Servidor de emparejamiento (Paso 7) + Ctrl+C (Paso 9)
  * Ver el resumen en matchmaker.h.
