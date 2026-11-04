@@ -1,7 +1,7 @@
 # Tarea 2: Torneo de Komikan Concurrente
 Sistemas Operativos — UDP
 
-**Integrantes:** Benjamín Oyarzín (GitHub `khaoosgg`) · Rodrigo Cantin (GitHub `1cnt`)
+**Integrantes:** Benjamín Oyarzún (GitHub `khaoosgg`) · Rodrigo Cantin (GitHub `1cnt`)
 
 El informe de diseño (máx. 2 páginas) está en [`informe.pdf`](informe.pdf).
 
@@ -116,12 +116,3 @@ quedaron copiadas en su memoria; el kernel las libera al terminar el hijo (`_exi
 | `src/log.c/.h` | Salida atómica a consola y archivo (un `write` por bloque) |
 | `tests/` | Pruebas automáticas |
 | `configs/` | Configuraciones de ejemplo (fallas, estrés, inválida) |
-
-## Participación
-
-| Integrante | Aportes principales |
-|---|---|
-| Benjamín Oyarzín (`khaoosgg`) | Estructura inicial del repositorio y Makefile; topología del tablero (grafo de 28 nodos, adyacencias del triángulo y la grilla, reglas de paso, salto y acorralamiento); primera versión concurrente con hilos y un mutex único (Fase 2), que sirvió de base para comparar granularidades en el informe. |
-| Rodrigo Cantin (`1cnt`) | Tablero en memoria compartida con mutex por casilla robustos; procesos Juez, Puma y Perros; estrategia de las fichas; matchmaker con semáforo de M mesas; lector de configuración; resiliencia ante caídas; Ctrl+C; pruebas automáticas e informe. |
-
-Desarrollado con apoyo de IA, con uso autorizado por el profesor.
