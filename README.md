@@ -1,6 +1,10 @@
 # Tarea 2: Torneo de Komikan Concurrente
 Sistemas Operativos — UDP
 
+**Integrantes:** Benjamín Oyarzín (GitHub `khaoosgg`) · Rodrigo Cantin (GitHub `1cnt`)
+
+El informe de diseño (máx. 2 páginas) está en [`informe.pdf`](informe.pdf).
+
 Servidor de emparejamiento + mesas de juego concurrentes + árbitros, en C (POSIX).
 Cada mesa es un **proceso** (Juez); el Puma y los Perros son **procesos** hijos de la mesa,
 con sus fichas como **hilos** (1 hilo Puma, 12 hilos Perros). El tablero vive en
@@ -12,6 +16,12 @@ por casilla** + un mutex de estado, todos `PTHREAD_PROCESS_SHARED` y `PTHREAD_MU
 ```bash
 make            # genera ./torneo  (gcc -Wall -Wextra -std=c17 -pthread)
 make clean      # borra binarios y logs
+```
+
+También compila sin el Makefile, con exactamente las opciones del enunciado (0 warnings):
+
+```bash
+gcc -Wall -Wextra -std=c17 -pthread -o torneo src/*.c
 ```
 
 ## Ejecutar
@@ -73,7 +83,8 @@ Conexiones del triángulo: 0–1, 0–2, 0–5, 1–2, 1–3, 1–4, 2–6, 2–
 ## Pruebas
 
 ```bash
-make test        # test_board (tablero, estrés, multiproceso, robustez) + test_jugador
+make test        # test_board + test_jugador + test_config (todo debe decir "todo OK")
+make test-config # solo los casos borde del config y de los argumentos
 make test-tsan   # test_board con ThreadSanitizer (detecta data races)
 ./test_board mostrar      # una partida dibujada
 ./test_jugador mostrar    # una partida con retardos reales
@@ -105,3 +116,12 @@ quedaron copiadas en su memoria; el kernel las libera al terminar el hijo (`_exi
 | `src/log.c/.h` | Salida atómica a consola y archivo (un `write` por bloque) |
 | `tests/` | Pruebas automáticas |
 | `configs/` | Configuraciones de ejemplo (fallas, estrés, inválida) |
+
+## Participación
+
+| Integrante | Aportes principales |
+|---|---|
+| Benjamín Oyarzín (`khaoosgg`) | Estructura inicial del repositorio y Makefile; topología del tablero (grafo de 28 nodos, adyacencias del triángulo y la grilla, reglas de paso, salto y acorralamiento); primera versión concurrente con hilos y un mutex único (Fase 2), que sirvió de base para comparar granularidades en el informe. |
+| Rodrigo Cantin (`1cnt`) | Tablero en memoria compartida con mutex por casilla robustos; procesos Juez, Puma y Perros; estrategia de las fichas; matchmaker con semáforo de M mesas; lector de configuración; resiliencia ante caídas; Ctrl+C; pruebas automáticas e informe. |
+
+Desarrollado con apoyo de IA, con uso autorizado por el profesor.
